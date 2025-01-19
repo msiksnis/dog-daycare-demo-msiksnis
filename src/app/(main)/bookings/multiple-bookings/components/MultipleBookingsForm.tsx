@@ -27,7 +27,13 @@ function SubmitButton({ isDisabled }: { isDisabled: boolean }) {
   }
 
   return (
-    <Button type="submit" disabled={isDisabled} className="min-w-44 px-6">
+    <Button
+      type="submit"
+      animation="scaleOnTap"
+      effect={"shineHover"}
+      disabled={isDisabled}
+      className="min-w-44 px-6"
+    >
       Create Bookings
     </Button>
   );

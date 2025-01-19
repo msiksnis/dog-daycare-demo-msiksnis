@@ -32,7 +32,7 @@ export default async function RootLayout({
         <body className={`${nunitoSans.className} antialiased`}>
           <ProgressBarProviders>
             <ReactQueryProvider>
-              <Toaster position="top-center" reverseOrder={false} />
+              <Toaster position="top-right" reverseOrder={false} />
               {children}
             </ReactQueryProvider>
           </ProgressBarProviders>

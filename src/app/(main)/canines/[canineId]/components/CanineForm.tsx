@@ -2778,6 +2778,7 @@ export default function CanineForm({ initialData }: CanineFormProps) {
               type="submit"
               disabled={isLoading}
               effect={"shineHover"}
+              animation="scaleOnTap"
               className="w-40 md:w-80"
             >
               {action}
