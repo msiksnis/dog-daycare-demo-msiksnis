@@ -45,8 +45,8 @@ export default function UpcomingBookingsForOwnerModal({
             key={index}
             className="mb-1 flex items-center justify-between rounded-full border border-slate-300 py-0.5 pl-2 pr-0.5 shadow-sm"
           >
-            <div className="w-1/4">{format(booking.date, "PP")}</div>
-            <div className="w-2/4 max-w-52 truncate pl-2 text-left">
+            <div className="w-fit">{format(booking.date, "PP")}</div>
+            <div className="w-2/4 max-w-52 truncate pl-2.5 text-left">
               {booking.canineName}
             </div>
             <div

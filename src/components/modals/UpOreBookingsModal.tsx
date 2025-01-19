@@ -21,6 +21,10 @@ export default function UpPreBookingsModal({
       ? `${title} for ${canineName}`
       : `There are no ${title.toLowerCase()} for ${canineName}`;
 
+  const sortedBookings = bookings.sort(
+    (a, b) => a.date.getTime() - b.date.getTime(),
+  );
+
   return (
     <ModalBones
       title={modalTitle}
@@ -31,8 +35,8 @@ export default function UpPreBookingsModal({
       optionalTitleClassName="text-left w-4/5 text-sm md:text-lg"
     >
       <div className="space-y-2 pb-4">
-        {bookings.length > 0 ? (
-          bookings.map((booking, index) => (
+        {sortedBookings.length > 0 ? (
+          sortedBookings.map((booking, index) => (
             <BookingInfo
               key={index}
               date={booking.date}
