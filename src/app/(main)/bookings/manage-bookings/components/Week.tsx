@@ -1,4 +1,4 @@
-import { formatDateToISO, formatDayNumber } from "@/lib/date-utils";
+import { formatDateToISO, formatDayNumber } from "@/lib/dateUtils";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval } from "date-fns";
 import { useEffect, useRef } from "react";
 
@@ -45,7 +45,7 @@ export default function Week({
             <div
               className={`flex justify-center rounded px-2 pb-1 pt-1.5 ${
                 format(day, "dd") === format(new Date(selectedDate), "dd")
-                  ? "bg-gradient-to-br from-blue-chill-200/90 to-blue-chill-300 tabular-nums text-text dark:text-input"
+                  ? "text-text bg-gradient-to-br from-blue-chill-200/90 to-blue-chill-300 tabular-nums dark:text-input"
                   : format(day, "yyyy-MM-dd") < format(new Date(), "yyyy-MM-dd")
                     ? "text-gray-400 dark:text-gray-500"
                     : "dark:text-foreground"
