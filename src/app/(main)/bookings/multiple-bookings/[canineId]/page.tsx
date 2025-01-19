@@ -2,15 +2,17 @@ import Container from "@/components/Container";
 import prismadb from "@/lib/prismadb";
 import MultipleBookingsForm from "../components/MultipleBookingsForm";
 
+type Props = Promise<{ canineId: string }>;
+
 export default async function CreateMultipleBookings({
   params,
 }: {
-  params: { canineId: Promise<string> };
+  params: Props;
 }) {
   const { canineId } = await params;
 
   const canine = await prismadb.canine.findUnique({
-    where: { id: await canineId },
+    where: { id: canineId },
   });
 
   const canineName = canine ? canine.name : "Canine";
