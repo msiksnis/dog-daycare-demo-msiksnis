@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}
+
+model User {
+  id                       String                  @id @default(cuid())
+  name                     String?
+  email                    String                  @unique
+  emailVerified            DateTime?
+  role                     Role                    @default(USER)
+  image                    String?
+  password                 String?
+  accounts                 Account[]
+  isTwoFactorEnabled       Boolean                 @default(false)
+  twoFactorConfirmation    TwoFactorConfirmation?
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+  roleRequests             RoleRequest[]           @relation("UserRequests")
+  handledRequests          RoleRequest[]           @relation("HandledRequests")
+  NotificationReadState    NotificationReadState[]
+  notificationsRequestedBy Notification[]          @relation("NotificationRequestedBy")
+  notificationsHandledBy   Notification[]          @relation("NotificationHandledBy")
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  DEMO
+  ADMIN
+}
+
+model RoleRequest {
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation("UserRequests", fields: [userId], references: [id])
+  requestedRole Role
+  status        Status         @default(PENDING)
+  handledById   String?
+  handledBy     User?          @relation("HandledRequests", fields: [handledById], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  approvedAt    DateTime?
+  rejectedAt    DateTime?
+  reason        String?
+  adminComment  String?
+  Notification  Notification[]
+
+  @@map("role_requests")
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], name: "provider_providerAccountId")
+  @@map("accounts")
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+
+  @@unique([email, token])
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+
+  @@unique([email, token])
+  @@map("password_reset_tokens")
+}
+
+model TwoFactorToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+
+  @@unique([email, token])
+  @@map("two_factor_tokens")
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+  @@map("two_factor_confirmations")
+}
+
+model Owner {
+  id               String    @id @default(uuid())
+  name             String
+  email            String?   @unique
+  address          String?
+  mobile           String?
+  workPhone        String?
+  emergencyContact String?
+  canines          Canine[]  @relation("OwnerToCanine")
+  bookings         Booking[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("owners")
+}
+
+model Canine {
+  id                    String               @id @default(uuid())
+  ownerId               String
+  owner                 Owner                @relation("OwnerToCanine", fields: [ownerId], references: [id], onDelete: Cascade)
+  name                  String
+  breed                 String
+  dateOfBirth           DateTime
+  gender                Gender
+  color                 String
+  microChipNumber       String?
+  spayed                Boolean
+  notes                 String?
+  vetName               String?
+  vetPhone              String?
+  vetAddress            String?
+  vaccinations          Vaccination[]        @relation("CanineToVaccination")
+  socialSkills          Json
+  behaviour             Json
+  health                Json
+  bookings              Booking[]
+  prepaidPackagePriceId String?
+  prepaidPackagePrice   PrepaidPackagePrice? @relation(fields: [prepaidPackagePriceId], references: [id])
+  numberOfPrepaidDays   Int?
+  bookingDetails        BookingDetails[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  Notification          Notification[]
+
+  @@index([ownerId])
+  @@map("canines")
+}
+
+model Vaccination {
+  id           String         @id @default(uuid())
+  DHPP         DateTime
+  LEPTO        DateTime
+  KC           DateTime
+  fleaed       Boolean
+  canineId     String
+  canine       Canine         @relation("CanineToVaccination", fields: [canineId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
+
+  @@index([canineId])
+  @@map("vaccinations")
+}
+
+model Booking {
+  id                  String           @id @default(uuid())
+  ownerId             String
+  owner               Owner            @relation(fields: [ownerId], references: [id])
+  canineId            String
+  canine              Canine           @relation(fields: [canineId], references: [id], onDelete: Cascade)
+  date                DateTime
+  isHalfDay           Boolean          @default(false)
+  overnightStay       Boolean          @default(false)
+  previousBookingDate DateTime?
+  sixMonthWarn        Boolean          @default(false)
+  checkInStatus       CheckInStatus    @default(NOT_CHECKED_IN)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  bookingDetails      BookingDetails[]
+
+  @@index([ownerId])
+  @@index([canineId])
+  @@map("bookings")
+}
+
+model BookingDetails {
+  id              String        @id @default(uuid())
+  bookingId       String
+  booking         Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  canineId        String
+  canine          Canine        @relation(fields: [canineId], references: [id], onDelete: Cascade)
+  bookingPrice    Float? // Store the price at the time of booking
+  customPrice     Float? // Custom price entered during the payment process
+  isPrepaid       Boolean       @default(false)
+  fullDay         Boolean       @default(false)
+  packageDaysUsed Int? // If prepaid package used, store days deducted
+  paymentMethod   PaymentMethod
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([bookingId])
+  @@map("booking_details")
+}
+
+model PriceHistory {
+  id               String    @id @default(uuid())
+  priceId          String
+  price            Price     @relation(fields: [priceId], references: [id]) // Relates to Price model
+  fullDayOneTime   Float // Price for a one-time full day
+  halfDayOneTime   Float // Price for a one-time half day
+  fullDayPrepaid   Float // Price for a prepaid full day
+  halfDayPrepaid   Float // Price for a prepaid half day
+  twoDogsFullDay   Float // Price for two dogs full day
+  twoDogsHalfDay   Float // Price for two dogs half day
+  threeDogsFullDay Float // Price for three dogs full day
+  threeDogsHalfDay Float // Price for three dogs half day
+  validFrom        DateTime
+  validTo          DateTime?
+  createdAt        DateTime  @default(now())
+
+  @@index([priceId])
+  @@map("price_history")
+}
+
+model Price {
+  id           String         @id @default(uuid())
+  category     PriceCategory // Full day, half day, two dogs, etc.
+  amount       Float // The price amount
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  priceHistory PriceHistory[] // Track changes over time
+
+  @@map("prices")
+}
+
+enum PriceCategory {
+  FULL_DAY
+  HALF_DAY
+  TWO_DOGS_FULL_DAY
+  TWO_DOGS_HALF_DAY
+  THREE_DOGS_FULL_DAY
+  THREE_DOGS_HALF_DAY
+}
+
+model PrepaidPackagePrice {
+  id        String             @id @default(uuid())
+  type      PrepaidPackageType // Enum to define full day, half day, etc.
+  price     Float // The price for that specific package type
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  canine    Canine[]
+
+  @@map("prepaid_package_prices")
+}
+
+enum PrepaidPackageType {
+  FULL_DAY
+  HALF_DAY
+  TWO_DOGS_FULL_DAY
+  TWO_DOGS_HALF_DAY
+  THREE_DOGS_FULL_DAY
+  THREE_DOGS_HALF_DAY
+}
+
+model PrepaidUsageLog {
+  id        String   @id @default(cuid())
+  canineId  String
+  bookingId String
+  usedDays  Int
+  usedAt    DateTime @default(now())
+
+  @@map("prepaid_usage_logs")
+}
+
+model ShopItem {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  stock       Int?
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("shop_items")
+}
+
+enum PaymentMethod {
+  CASH
+  CHEQUE
+  CARD
+  PAY_LATER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum CheckInStatus {
+  NOT_CHECKED_IN
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+model Notification {
+  id                    String                  @id @default(cuid())
+  requestedById         String?
+  requestedBy           User?                   @relation("NotificationRequestedBy", fields: [requestedById], references: [id])
+  handledById           String?
+  handledBy             User?                   @relation("NotificationHandledBy", fields: [handledById], references: [id])
+  type                  NotificationType
+  title                 String
+  message               String?
+  requestId             String?
+  request               RoleRequest?            @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  vaccineId             String?
+  vaccine               Vaccination?            @relation(fields: [vaccineId], references: [id], onDelete: Cascade)
+  canineId              String?
+  canine                Canine?                 @relation(fields: [canineId], references: [id], onDelete: Cascade)
+  handledAt             DateTime?
+  metadata              Json?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  NotificationReadState NotificationReadState[]
+
+  @@index([type])
+  @@map("notifications")
+}
+
+model NotificationReadState {
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  read   Boolean   @default(false)
+  readAt DateTime?
+
+  @@id([notificationId, userId])
+  @@map("notification_read_states")
+}
+
+enum NotificationType {
+  ROLE_REQUEST
+  VACCINATION_WARNING
+  PREPAID_PACKAGE_LOW
+  CANINE_BIRTHDAY
+  OTHER
+}
