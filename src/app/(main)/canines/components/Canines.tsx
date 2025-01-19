@@ -67,7 +67,7 @@ export default function Canines({
   };
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl">
       <div className="flex items-center justify-between">
         <div className="relative max-w-60 md:min-w-60">
           <Input

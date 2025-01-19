@@ -137,7 +137,7 @@ export default function Owners() {
       heading={`Owners (${owners.length})`}
       subHeading="Manage canine owners"
     >
-      <div className="flex items-center justify-between">
+      <div className="mx-auto flex max-w-6xl items-center justify-between">
         <div className="relative max-w-60 md:min-w-60">
           <Input
             placeholder="Filter by name"

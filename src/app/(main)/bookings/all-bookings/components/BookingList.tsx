@@ -108,7 +108,7 @@ export default function BookingList() {
           : `No bookings for ${format(selectedDate, "dd MMM")}`
       }
     >
-      <div className="max-w-6xl border-b border-t border-border bg-card py-10 shadow-sm md:mt-0 md:rounded-md md:border md:px-2 md:py-4 md:shadow-sm">
+      <div className="mx-auto max-w-6xl border-b border-t border-border bg-card py-10 shadow-sm md:mt-0 md:rounded-md md:border md:px-2 md:py-4 md:shadow-sm">
         <div className="mb-6 flex items-center justify-between px-4">
           <DateField
             id="date"
