@@ -1,5 +1,5 @@
 import BookingInfo from "../BookingInfo";
-import { ModalBones } from "../ModalBones";
+import { Modal, ModalContent, ModalTitle } from "../Modal";
 
 interface UpPreBookingsModalProps {
   isOpen: boolean;
@@ -26,28 +26,23 @@ export default function UpPreBookingsModal({
   );
 
   return (
-    <ModalBones
-      title={modalTitle}
-      description=""
-      isOpen={isOpen}
-      onClose={onClose}
-      optionalClassName="py-4 px-2  md:px-4   "
-      optionalTitleClassName="text-left w-4/5 text-sm md:text-lg"
-    >
-      <div className="space-y-2 pb-4">
-        {sortedBookings.length > 0 ? (
-          sortedBookings.map((booking, index) => (
-            <BookingInfo
-              key={index}
-              date={booking.date}
-              isHalfDay={booking.isHalfDay}
-              label=""
-            />
-          ))
-        ) : (
-          <div>No bookings available</div>
-        )}
-      </div>
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent title={modalTitle}>
+        <div className="space-y-2 pb-4">
+          {sortedBookings.length > 0 ? (
+            sortedBookings.map((booking, index) => (
+              <BookingInfo
+                key={index}
+                date={booking.date}
+                isHalfDay={booking.isHalfDay}
+                label=""
+              />
+            ))
+          ) : (
+            <div>No bookings available</div>
+          )}
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }

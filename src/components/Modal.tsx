@@ -46,7 +46,7 @@ ModalOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const ModalVariants = cva(
   cn(
     "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 min-w-[26rem] pb-10 md:pb-6",
-    "md:left-[50%] md:top-[50%] md:grid md:w-fit md:max-w-2xl md:translate-x-[-50%] md:translate-y-[-50%] md:border md:duration-200 md:data-[state=open]:animate-in md:data-[state=closed]:animate-out md:data-[state=closed]:fade-out-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] md:rounded-xl md:overflow-y-scroll",
+    "md:left-[50%] md:top-[50%] md:grid md:w-fit md:max-w-2xl md:translate-x-[-50%] md:translate-y-[-50%] md:border md:duration-200 md:data-[state=open]:animate-in md:data-[state=closed]:animate-out md:data-[state=closed]:fade-out-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] md:rounded-xl md:overflow-y-scroll no-scrollbar",
   ),
   {
     variants: {
@@ -77,7 +77,7 @@ const ModalContent = React.forwardRef<
   ModalContentProps
 >(
   (
-    { side = "bottom", className, children, hideCloseButton, ...props },
+    { side = "bottom", className, children, title, hideCloseButton, ...props },
     ref,
   ) => (
     <ModalPortal>
@@ -87,14 +87,14 @@ const ModalContent = React.forwardRef<
         className={cn(ModalVariants({ side }), className)}
         {...props}
       >
-        <ModalTitle className="hidden">Log in</ModalTitle>
-        {children}
+        <ModalTitle className="">{title}</ModalTitle>
         {!hideCloseButton && (
           <ModalClose className="group/close absolute right-2 top-2 rounded-full p-1 outline-none ring-offset-background transition-all duration-300 hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-secondary">
             <X className="size-5 opacity-70 group-hover/close:opacity-100" />
             <span className="sr-only">Close</span>
           </ModalClose>
         )}
+        {children}
       </DialogPrimitive.Content>
     </ModalPortal>
   ),
