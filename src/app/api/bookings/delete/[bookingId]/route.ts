@@ -4,11 +4,8 @@ import prismadb from "@/lib/prismadb";
 
 type Params = Promise<{ bookingId: string }>;
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { params: Params } },
-) {
-  const { bookingId } = await params.params;
+export async function DELETE(req: Request, { params }: { params: Params }) {
+  const { bookingId } = await params;
 
   try {
     if (!bookingId) {
