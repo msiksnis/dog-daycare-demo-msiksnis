@@ -46,8 +46,8 @@ export default function LoginForm() {
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "demo@demo.com",
+      password: "demouser",
     },
   });
 
@@ -76,7 +76,7 @@ export default function LoginForm() {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back!"
+      headerLabel="Test with demo account!"
       backButtonLabel="Don't have an account?"
       backButtonHref="/auth/register"
       showSocialLogin={true}
