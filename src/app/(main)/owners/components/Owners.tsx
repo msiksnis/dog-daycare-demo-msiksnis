@@ -231,13 +231,13 @@ export default function Owners() {
                             <HoverCardContent side="top">
                               <Link
                                 href={`/bookings/multiple-bookings/${canine.id}`}
-                                className="flex items-center rounded-sm from-blue-chill-200 to-blue-chill-300 px-2 py-1 text-sm transition-colors duration-200 hover:bg-gradient-to-br"
+                                className="flex items-center rounded-sm from-blue-chill-200 to-blue-chill-200/80 px-2 py-1 text-sm transition-colors duration-200 hover:bg-gradient-to-br"
                               >
                                 Add Booking
                               </Link>
                               <Link
                                 href={`/canines/${canine.id}`}
-                                className="flex items-center rounded-sm from-blue-chill-200 to-blue-chill-300 px-2 py-1 text-sm transition-colors duration-200 hover:bg-gradient-to-br"
+                                className="flex items-center rounded-sm from-blue-chill-200 to-blue-chill-200/80 px-2 py-1 text-sm transition-colors duration-200 hover:bg-gradient-to-br"
                               >
                                 View/Edit Canine
                               </Link>

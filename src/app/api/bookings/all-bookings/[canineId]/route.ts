@@ -3,7 +3,7 @@ import prismadb from "@/lib/prismadb";
 
 type Params = Promise<{ canineId: string }>;
 
-export async function DELETE(req: Request, { params }: { params: Params }) {
+export async function GET(req: Request, { params }: { params: Params }) {
   const { canineId } = await params;
 
   try {
