@@ -327,7 +327,6 @@ export default function BookingList() {
           fetchBookings(selectedDateRef.current);
           setCreateBookingModalOpen(false);
         }}
-        loading={isLoadingBookings}
       />
       <UpcomingBookingsModal
         isOpen={upcomingBookingsModalOpen}
