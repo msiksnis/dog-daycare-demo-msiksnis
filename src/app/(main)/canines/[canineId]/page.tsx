@@ -3,15 +3,13 @@ import CanineForm from "./components/CanineForm";
 import { CanineInterface } from "./canineTypes";
 import Container from "@/components/Container";
 
-export default async function CaninePage({
-  params,
-}: {
-  params: { canineId: Promise<string> };
-}) {
+type Params = Promise<{ canineId: string }>;
+
+export default async function CaninePage({ params }: { params: Params }) {
   const { canineId } = await params;
 
   const canine = await prismadb.canine.findUnique({
-    where: { id: await canineId },
+    where: { id: canineId },
     include: { vaccinations: true, owner: true },
   });
 
