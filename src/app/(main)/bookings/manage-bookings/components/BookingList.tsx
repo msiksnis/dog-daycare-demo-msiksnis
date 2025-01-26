@@ -331,13 +331,11 @@ export default function BookingList() {
       <UpcomingBookingsModal
         isOpen={upcomingBookingsModalOpen}
         onClose={() => setUpcomingBookingsModalOpen(false)}
-        onConfirm={() => {}}
         canineId={selectedCanineId}
         canineName={
           bookings.find((booking) => booking.canineId === selectedCanineId)
             ?.canine.name || ""
         }
-        loading={isLoadingBookings}
       />
       <Summary canineId={selectedCanineId} canineName={selectedCanineName} />
     </Container>
