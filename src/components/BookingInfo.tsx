@@ -20,7 +20,7 @@ export default function BookingInfo({
   return (
     <span
       className={cn(
-        "flex items-center justify-between space-x-4 rounded-full border border-slate-300 pl-3 text-sm 2xl:space-x-10",
+        "mt-4 flex items-center justify-between space-x-4 rounded-full border border-slate-300 pl-3 text-sm md:mt-0 2xl:space-x-10",
         className,
       )}
     >

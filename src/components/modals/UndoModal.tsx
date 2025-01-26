@@ -34,7 +34,7 @@ export default function UndoModal({
   return (
     <Modal open={isOpen} onOpenChange={onClose}>
       <ModalContent>
-        <ModalHeader title={title} />
+        <ModalHeader title={title} className="border-none" />
         <div className="flex w-full items-center justify-end space-x-2 pt-6">
           <Button
             variant="outline"

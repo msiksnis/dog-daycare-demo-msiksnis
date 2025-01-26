@@ -37,7 +37,7 @@ ModalOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const ModalVariants = cva(
   cn(
-    "fixed z-50 gap-4 bg-background pt-4 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 min-w-[26rem] pb-10 md:pb-6",
+    "fixed z-50 gap-4 bg-background shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 min-w-[26rem] pb-10 md:pb-6 overflow-x-scroll",
     "md:left-[50%] md:top-[50%] md:grid md:w-fit md:max-w-2xl md:translate-x-[-50%] md:translate-y-[-50%] md:border md:duration-200 md:data-[state=open]:animate-in md:data-[state=closed]:animate-out md:data-[state=closed]:fade-out-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] md:rounded-xl md:overflow-y-scroll no-scrollbar",
   ),
   {
@@ -45,7 +45,7 @@ const ModalVariants = cva(
       side: {
         top: "inset-x-0 top-0 border-b rounded-b-xl max-h-[90%] md:h-fit data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
         bottom:
-          "inset-x-0 bottom-0 border-t md:h-fit max-h-[90%] rounded-t-xl data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+          "inset-x-0 bottom-0 border-t over md:h-fit max-h-[90%] rounded-t-xl data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         left: "inset-y-0 left-0 h-full md:h-fit w-3/4 border-r rounded-r-xl data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
         right:
           "inset-y-0 right-0 h-full md:h-fit w-3/4 border-l rounded-l-xl data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
@@ -110,7 +110,10 @@ const ModalHeader = ({
   hideCloseButton?: boolean;
 }) => (
   <div
-    className={cn("flex items-start justify-between bg-white", className)}
+    className={cn(
+      "sticky top-0 flex items-start justify-between border-b bg-white pb-2 pt-4",
+      className,
+    )}
     {...props}
   >
     <div className="">

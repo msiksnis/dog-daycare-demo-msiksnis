@@ -32,6 +32,7 @@ export default function AlertModal({
         <ModalHeader
           title={`Delete ${name}?`}
           description="This action cannot be undone."
+          className="border-none"
         />
         <div className="flex w-full items-center justify-end space-x-2 pt-6">
           <Button

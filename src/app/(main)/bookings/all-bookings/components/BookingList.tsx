@@ -1,17 +1,22 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { Plus, XIcon } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
-import { CheckInStatus } from "@prisma/client";
+import Container from "@/components/Container";
 import MainLoader from "@/components/MainLoader";
 import CreateBookingModal from "@/components/modals/CreateBookingModal";
+import UpcomingBookingsModal from "@/components/modals/UpcomingBookingsModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useBookingsUIStore from "@/hooks/useBookingsUiStore";
+import useDrawerStore from "@/hooks/useDrawerStore";
+import useLoadingStore from "@/hooks/useLoadingStore";
 import { formatDateToISO } from "@/lib/dateUtils";
+import { CheckInStatus } from "@prisma/client";
 import { fetchBookingsAction } from "../actions/fetchBookingsAction";
 import { useDeleteBookingMutation } from "../mutations/useDeleteBookingMutation";
 import { useUpdateStatusMutation } from "../mutations/useUpdateStatusMutation";
@@ -22,11 +27,6 @@ import DesktopBookingCard from "./DesktopBookingCard";
 import MobileBookingCard from "./MobileBookingCard";
 import Summary from "./Summary";
 import Week from "./Week";
-import useBookingsUIStore from "@/hooks/useBookingsUiStore";
-import useLoadingStore from "@/hooks/useLoadingStore";
-import useDrawerStore from "@/hooks/useDrawerStore";
-import Container from "@/components/Container";
-import UpcomingBookingsModal from "@/components/modals/UpcomingBookingsModal";
 
 export default function BookingList() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -34,7 +34,6 @@ export default function BookingList() {
   const queryClient = useQueryClient();
   const queryKey: QueryKey = ["bookings", selectedDate];
 
-  // Zustand store for UI state
   const {
     filterText,
     createBookingModalOpen,
@@ -117,8 +116,8 @@ export default function BookingList() {
             onChange={(value) => setSelectedDate(new Date(value))}
           />
           <Button
-            variant="default"
             className="dark:hover:bg-accent-hovered flex h-9 items-center justify-between whitespace-nowrap rounded-md px-4 text-sm dark:bg-accent"
+            animation="scaleOnTap"
             onClick={() => {
               setCreateBookingModalOpen(true);
             }}
@@ -238,13 +237,11 @@ export default function BookingList() {
       <UpcomingBookingsModal
         isOpen={upcomingBookingsModalOpen}
         onClose={() => setUpcomingBookingsModalOpen(false)}
-        onConfirm={() => {}}
         canineId={selectedCanineId}
         canineName={
           bookings.find((booking) => booking.canineId === selectedCanineId)
             ?.canine.name || ""
         }
-        loading={isLoadingBookings}
       />
       <Summary canineId={selectedCanineId} canineName={selectedCanineName} />
     </Container>

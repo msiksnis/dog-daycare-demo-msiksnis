@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import useSWR from "swr";
-import * as z from "zod";
-import { toast } from "react-hot-toast";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { Delete, Info, LoaderCircle } from "lucide-react";
-import { formatDateToISO, parseDateString } from "@/lib/dateUtils";
+import { Calendar } from "@/components/calendars/CalendarSingle";
+import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -18,20 +12,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
 import useBookingsStore from "@/hooks/useBookingsStore";
-import ToggleButton from "./ToggleButton";
-import { Calendar } from "@/components/calendars/CalendarSingle";
+import { formatDateToISO, parseDateString } from "@/lib/dateUtils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { isAfter, subMonths } from "date-fns";
-import { Spinner } from "@/components/Spinner";
+import { Delete, Info } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import useSWR from "swr";
+import * as z from "zod";
+import ToggleButton from "./ToggleButton";
 
 const formSchema = z.object({
   canineId: z.string().min(1),
@@ -47,6 +47,7 @@ type BookingFormValues = z.infer<typeof formSchema>;
 
 interface CreateBookingProps {
   onBookingCreated: () => void;
+  onClose: () => void;
 }
 
 interface ExtendedBookingFormValues extends BookingFormValues {
@@ -61,6 +62,7 @@ interface Canine {
 
 export default function CreateBooking({
   onBookingCreated,
+  onClose,
 }: CreateBookingProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [ownerId, setOwnerId] = useState<string | null>(null);
@@ -153,7 +155,7 @@ export default function CreateBooking({
           </div>
         );
         toast(<CustomToastContent />);
-        setIsLoading(false); // Reset loading state
+        setIsLoading(false);
         return;
       }
 
@@ -164,6 +166,8 @@ export default function CreateBooking({
 
       resetForm();
       toast.success("New booking added");
+      onBookingCreated();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
       toast.error("Something went wrong. Please try again.");
@@ -281,7 +285,7 @@ export default function CreateBooking({
       setSixMonthWarning(!hasRecentBooking);
     } catch (error) {
       console.error("Error checking six-month interval:", error);
-      setSixMonthWarning(true); // Set warning if there's an error
+      setSixMonthWarning(true);
     } finally {
       setIsSixMonthCheckLoading(false);
     }
@@ -319,32 +323,27 @@ export default function CreateBooking({
   `;
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center">
       <Form {...form}>
         <div>
           {!selectedCanineName ? (
-            <div className="mb-4 h-20">
+            <div className="mb-4 mt-8 md:mt-0">
               <FormField
                 control={form.control}
                 name="canineId"
                 render={({ field }) => (
                   <FormItem className="relative">
-                    <div className="grid items-center gap-1">
-                      <div className="whitespace-nowrap text-lg">
-                        Add new booking for
-                      </div>
-                      <Input
-                        type="text"
-                        placeholder="Search canine by name"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        ref={searchInputRef}
-                        className="h-9 text-base"
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      placeholder="Search canine by name"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      ref={searchInputRef}
+                      className="h-9 text-base"
+                    />
                     {searchQuery && filteredCanines.length > 0 && (
-                      <div className="absolute left-0 top-[4.25em] z-50 min-w-[50%] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md dark:bg-background">
+                      <div className="absolute left-0 z-50 min-w-[50%] rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
                         {filteredCanines.map((canine, index) => (
                           <div
                             key={canine.id}
@@ -489,6 +488,7 @@ export default function CreateBooking({
               }
               size={"lg"}
               effect={"shineHover"}
+              animation="scaleOnTap"
               onClick={form.handleSubmit(onSubmit)}
               className="flex flex-1 items-center justify-center whitespace-nowrap rounded-md px-4 disabled:cursor-not-allowed disabled:opacity-50"
             >
