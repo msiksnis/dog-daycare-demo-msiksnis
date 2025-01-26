@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 import RoleChangeForm from "@/app/(main)/settings/profile/requestRole/RoleChangeForm";
-import { Role } from "@prisma/client";
-import { ModalBones } from "../ModalBones";
-import { ExtendedUser } from "../../../next-auth";
 import { useIsMobile } from "@/hooks/useMobile";
+import { Role } from "@prisma/client";
+import { ExtendedUser } from "../../../next-auth";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
 
 interface RoleChangeModalProps {
   isOpen: boolean;
@@ -37,15 +37,11 @@ export default function RoleChangeModal({
   const side = isMobile ? "bottom" : "secondary";
 
   return (
-    <ModalBones
-      title="Request role change"
-      optionalTitleClassName="px-4 pt-4"
-      description=""
-      isOpen={isOpen}
-      onClose={onClose}
-      side={side}
-    >
-      <RoleChangeForm onConfirm={onConfirm} loading={loading} user={user} />
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent side={side}>
+        <ModalHeader title="Role change request" className="px-4 pt-4" />
+        <RoleChangeForm onConfirm={onConfirm} loading={loading} user={user} />
+      </ModalContent>
+    </Modal>
   );
 }

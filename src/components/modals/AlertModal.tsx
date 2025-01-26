@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Modal, ModalContent, ModalHeader } from "../Modal";
 import { Button } from "../ui/button";
-import { ModalBones } from "../ModalBones";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -27,31 +27,32 @@ export default function AlertModal({
   if (!isMounted) return null;
 
   return (
-    <ModalBones
-      title={`Delete ${name}?`}
-      description="This action cannot be undone."
-      isOpen={isOpen}
-      onClose={onClose}
-    >
-      <div className="flex w-full items-center justify-end space-x-2 pt-6">
-        <Button
-          variant="outline"
-          size="lg"
-          disabled={loading}
-          onClick={onClose}
-          className="font-normal"
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="destructive"
-          size="lg"
-          disabled={loading}
-          onClick={onConfirm}
-        >
-          Delete
-        </Button>
-      </div>
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent>
+        <ModalHeader
+          title={`Delete ${name}?`}
+          description="This action cannot be undone."
+        />
+        <div className="flex w-full items-center justify-end space-x-2 pt-6">
+          <Button
+            variant="outline"
+            animation="scaleOnTap"
+            disabled={loading}
+            onClick={onClose}
+            className="font-normal"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            animation="scaleOnTap"
+            disabled={loading}
+            onClick={onConfirm}
+          >
+            Delete
+          </Button>
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }

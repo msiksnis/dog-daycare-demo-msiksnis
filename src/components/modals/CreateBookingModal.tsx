@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { ModalBones } from "../ModalBones";
 import CreateBooking from "@/app/(main)/bookings/manage-bookings/components/CreateBooking";
+import { useEffect, useState } from "react";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
 
 interface CreateBookingModalProps {
   isOpen: boolean;
@@ -22,8 +22,11 @@ export default function CreateBookingModal({
   if (!isMounted) return null;
 
   return (
-    <ModalBones title="" description="" isOpen={isOpen} onClose={onClose}>
-      <CreateBooking onBookingCreated={onConfirm} />
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent>
+        <ModalHeader title="Add new booking" />
+        <CreateBooking onBookingCreated={onConfirm} onClose={onClose} />
+      </ModalContent>
+    </Modal>
   );
 }

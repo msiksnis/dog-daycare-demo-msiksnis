@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,14 +19,6 @@ const ModalOverlay = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
-  // <DialogPrimitive.Overlay
-  //   className={cn(
-  //     "fixed inset-0 z-50 bg-primary/95 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 md:bg-primary/50",
-  //     className,
-  //   )}
-  //   {...props}
-  //   ref={ref}
-  // />
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
@@ -45,7 +37,7 @@ ModalOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const ModalVariants = cva(
   cn(
-    "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 min-w-[26rem] pb-10 md:pb-6",
+    "fixed z-50 gap-4 bg-background pt-4 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 min-w-[26rem] pb-10 md:pb-6",
     "md:left-[50%] md:top-[50%] md:grid md:w-fit md:max-w-2xl md:translate-x-[-50%] md:translate-y-[-50%] md:border md:duration-200 md:data-[state=open]:animate-in md:data-[state=closed]:animate-out md:data-[state=closed]:fade-out-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] md:rounded-xl md:overflow-y-scroll no-scrollbar",
   ),
   {
@@ -84,16 +76,21 @@ const ModalContent = React.forwardRef<
       <ModalOverlay />
       <DialogPrimitive.Content
         ref={ref}
-        className={cn(ModalVariants({ side }), className)}
+        className={cn(
+          ModalVariants({ side }),
+          "px-4 focus-visible:outline-none",
+          className,
+        )}
         {...props}
       >
-        <ModalTitle className="">{title}</ModalTitle>
-        {!hideCloseButton && (
-          <ModalClose className="group/close absolute right-2 top-2 rounded-full p-1 outline-none ring-offset-background transition-all duration-300 hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <div className="hidden">
+          <ModalTitle>{title}</ModalTitle>
+          <ModalDescription>description</ModalDescription>
+          <ModalClose className="group/close -mr-1 rounded-md p-1 outline-none transition-all duration-300 hover:bg-gray-100 hover:opacity-100 focus:outline-none data-[state=open]:bg-secondary">
             <X className="size-5 opacity-70 group-hover/close:opacity-100" />
             <span className="sr-only">Close</span>
           </ModalClose>
-        )}
+        </div>
         {children}
       </DialogPrimitive.Content>
     </ModalPortal>
@@ -103,15 +100,30 @@ ModalContent.displayName = DialogPrimitive.Content.displayName;
 
 const ModalHeader = ({
   className,
+  title,
+  description,
+  hideCloseButton,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement> & {
+  title?: string;
+  description?: string;
+  hideCloseButton?: boolean;
+}) => (
   <div
-    className={cn(
-      "flex flex-col space-y-2 text-center sm:text-left",
-      className,
-    )}
+    className={cn("flex items-start justify-between bg-white", className)}
     {...props}
-  />
+  >
+    <div className="">
+      {title && <h2 className="text-lg font-semibold">{title}</h2>}
+      {description && <h2 className="font-muted">{description}</h2>}
+    </div>
+    {!hideCloseButton && (
+      <ModalClose className="rounded-md p-0.5 transition hover:bg-gray-100 focus:outline-none">
+        <X className="h-5 w-5 text-gray-500" />
+        <span className="sr-only">Close</span>
+      </ModalClose>
+    )}
+  </div>
 );
 ModalHeader.displayName = "ModalHeader";
 
@@ -155,13 +167,13 @@ ModalDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
   Modal,
-  ModalPortal,
-  ModalOverlay,
-  ModalTrigger,
   ModalClose,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalTitle,
   ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  ModalPortal,
+  ModalTitle,
+  ModalTrigger,
 };

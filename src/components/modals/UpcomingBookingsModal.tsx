@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { format, parseISO, addDays, isAfter, startOfDay } from "date-fns";
+import { addDays, format, isAfter, parseISO, startOfDay } from "date-fns";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { ModalBones } from "../ModalBones";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
+import BookingInfo from "../BookingInfo";
 
 interface UpcomingBookingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  loading: boolean;
   canineId: string;
   canineName: string;
 }
@@ -17,8 +16,6 @@ interface UpcomingBookingsModalProps {
 export default function UpcomingBookingsModal({
   isOpen,
   onClose,
-  onConfirm,
-  loading,
   canineId,
   canineName,
 }: UpcomingBookingsModalProps) {
@@ -64,35 +61,25 @@ export default function UpcomingBookingsModal({
 
   const title =
     upcomingBookings.length > 0
-      ? `There ${upcomingBookings.length > 1 ? "are" : "is"} ${
-          upcomingBookings.length
-        } upcoming booking${
+      ? `${upcomingBookings.length} upcoming booking${
           upcomingBookings.length > 1 ? "s" : ""
-        } for ${canineName}:`
+        } for ${canineName}`
       : `There are no upcoming bookings for ${canineName}`;
 
   return (
-    <ModalBones title={title} description="" isOpen={isOpen} onClose={onClose}>
-      <div>
-        {upcomingBookings.map((booking, index) => (
-          <div
-            key={index}
-            className="mb-2 flex items-center justify-between rounded-full border border-slate-300 pl-4 shadow-sm"
-          >
-            <div className="">{format(booking.date, "PP")}</div>
-            <div
-              className={cn(
-                "text-text flex w-28 items-center justify-center whitespace-nowrap rounded-full py-1 text-sm font-normal",
-                booking.isHalfDay
-                  ? "border border-lime-500 bg-lime-300 hover:bg-lime-300"
-                  : "border border-purple-400 bg-purple-300 hover:bg-purple-300",
-              )}
-            >
-              {booking.isHalfDay ? "Half Day" : "Full Day"}
-            </div>
-          </div>
-        ))}
-      </div>
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent>
+        <ModalHeader title={title} />
+        <div className="space-y-2 pb-4">
+          {upcomingBookings.map((booking, index) => (
+            <BookingInfo
+              key={index}
+              date={booking.date}
+              isHalfDay={booking.isHalfDay}
+            />
+          ))}
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }

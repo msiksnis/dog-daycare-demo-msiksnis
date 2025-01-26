@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { CheckInStatus } from "@prisma/client";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
 import { Button } from "../ui/button";
-import { ModalBones } from "../ModalBones";
 
 interface UndoModalProps {
   isOpen: boolean;
@@ -32,26 +32,27 @@ export default function UndoModal({
   }?`;
 
   return (
-    <ModalBones title={title} description="" isOpen={isOpen} onClose={onClose}>
-      <div className="flex w-full items-center justify-end space-x-2 pt-6">
-        <Button
-          variant="outline"
-          size="lg"
-          disabled={loading}
-          onClick={onClose}
-          className="font-normal"
-        >
-          Cancel
-        </Button>
-        <Button
-          size="lg"
-          disabled={loading}
-          onClick={onConfirm}
-          className="font-normal"
-        >
-          Reverse
-        </Button>
-      </div>
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent>
+        <ModalHeader title={title} />
+        <div className="flex w-full items-center justify-end space-x-2 pt-6">
+          <Button
+            variant="outline"
+            disabled={loading}
+            onClick={onClose}
+            className="font-normal"
+          >
+            Cancel
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={onConfirm}
+            className="font-normal"
+          >
+            Reverse
+          </Button>
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }

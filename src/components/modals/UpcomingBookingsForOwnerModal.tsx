@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import { ModalBones } from "../ModalBones";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
+import BookingInfo from "../BookingInfo";
 
 interface UpcomingBookingsForOwnerProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export default function UpcomingBookingsForOwnerModal({
 }: UpcomingBookingsForOwnerProps) {
   const title =
     bookings.length > 0
-      ? `${ownerName} bookings (${bookings.length})`
+      ? `${ownerName} ${bookings.length} bookings`
       : `No upcoming bookings for ${ownerName}`;
 
   // To sort bookings by canineName and date
@@ -31,37 +32,19 @@ export default function UpcomingBookingsForOwnerModal({
   });
 
   return (
-    <ModalBones
-      title={title}
-      description=""
-      isOpen={isOpen}
-      onClose={onClose}
-      optionalClassName="max-h-[90vh] overflow-y-scroll no-scrollbar px-2.5 py-4"
-      optionalTitleClassName="text-left w-11/12 font-medium text-sm md:text-lg pl-1 -mt-1"
-    >
-      <div>
-        {sortedBookings.map((booking, index) => (
-          <div
-            key={index}
-            className="mb-1 flex items-center justify-between rounded-full border border-slate-300 py-0.5 pl-2 pr-0.5 shadow-sm"
-          >
-            <div className="w-fit">{format(booking.date, "PP")}</div>
-            <div className="w-2/4 max-w-52 truncate pl-2.5 text-left">
-              {booking.canineName}
-            </div>
-            <div
-              className={cn(
-                "text-text flex w-20 items-center justify-center whitespace-nowrap rounded-full py-1 text-xs font-normal",
-                booking.isHalfDay
-                  ? "bg-lime-300 hover:bg-lime-300"
-                  : "bg-purple-300 hover:bg-purple-300",
-              )}
-            >
-              {booking.isHalfDay ? "Half Day" : "Full Day"}
-            </div>
-          </div>
-        ))}
-      </div>
-    </ModalBones>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent>
+        <ModalHeader title={title} />
+        <div className="space-y-2 pb-4">
+          {sortedBookings.map((booking, index) => (
+            <BookingInfo
+              key={index}
+              date={booking.date}
+              isHalfDay={booking.isHalfDay}
+            />
+          ))}
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }

@@ -1,5 +1,5 @@
 import BookingInfo from "../BookingInfo";
-import { Modal, ModalContent, ModalTitle } from "../Modal";
+import { Modal, ModalContent, ModalHeader } from "../Modal";
 
 interface UpPreBookingsModalProps {
   isOpen: boolean;
@@ -27,7 +27,8 @@ export default function UpPreBookingsModal({
 
   return (
     <Modal open={isOpen} onOpenChange={onClose}>
-      <ModalContent title={modalTitle}>
+      <ModalContent>
+        <ModalHeader title={modalTitle} />
         <div className="space-y-2 pb-4">
           {sortedBookings.length > 0 ? (
             sortedBookings.map((booking, index) => (
@@ -35,7 +36,6 @@ export default function UpPreBookingsModal({
                 key={index}
                 date={booking.date}
                 isHalfDay={booking.isHalfDay}
-                label=""
               />
             ))
           ) : (
