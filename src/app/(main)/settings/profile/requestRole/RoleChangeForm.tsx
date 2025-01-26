@@ -57,7 +57,7 @@ export default function RoleChangeForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="border-t">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-4 p-4">
           <div className="flex items-center justify-between">
             <p className="text-lg font-medium">Your current role is:</p>

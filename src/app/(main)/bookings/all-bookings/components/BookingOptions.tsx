@@ -167,10 +167,8 @@ export default function BookingOptions({
       <UpcomingBookingsModal
         isOpen={upcomingBookingsModalOpen}
         onClose={() => setUpcomingBookingsModalOpen(false)}
-        onConfirm={() => {}}
         canineId={canineId}
         canineName={canineName}
-        loading={isLoading}
       />
     </>
   );
